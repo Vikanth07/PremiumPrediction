@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+</head>
+<body>
+
+    <!-- Button to view health card -->
+    <button class="view-card-btn" onclick="toggleCardModal()">View Health Card</button>
+
+    <!-- Medical records section -->
+    <div class="medical-records">
+        <h2>Medical Records</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Doctor Comments</th>
+                    <th>Medicines Suggested</th>
+                    <th>Hospital Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if medical_records and medical_records|length > 0 %}
+                    {% for record in medical_records %}
+                    <tr>
+                        <td>{{ record.formatted_date if record.formatted_date else "N/A" }}</td>
+                        <td>{{ record.formatted_time if record.formatted_time else "N/A" }}</td>
+                        <td>{{ record.comments if record.comments else "No comments available" }}</td>
+                        <td>
+                            <ul>
+                                {% for medicine in record.medicines_suggested %}
+                                    <li>{{ medicine }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td>{{ record.hospital_name if record.hospital_name else "N/A" }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5">No medical records found.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Apply Premium button -->
+    <button class="apply-premium-btn" onclick="checkPremiumEligibility()">Apply for Premium</button>
+
+    <!-- Premium eligibility modal -->
+    <div class="premium-modal" id="premiumModal" style="display:none;">
+        <div class="card">
+            <button class="close-btn" onclick="togglePremiumModal()">×</button>
+            <h2>Premium Eligibility</h2>
+            <p id="premiumMessage"></p>
+        </div>
+    </div>
+
+    <!-- Health card modal -->
+    <div class="card-modal" id="cardModal">
+        <div class="card" id="healthCard">
+            <button class="close-btn" onclick="toggleCardModal()">×</button>
+            <h2 style="text-align:center;">Health Card</h2>
+            <img src="data:image/png;base64,{{ user.user_photo }}" alt="User Photo">
+            <div class="card-details">
+                <p><strong>Health Card ID:</strong> {{ user.health_card_number }}</p>
+                <p><strong>Name:</strong> {{ user.name }}</p>
+                <p><strong>DOB:</strong> {{ user.dob }}</p>
+                <p><strong>Gender:</strong> {{ user.gender }}</p>
+            </div>
+
+            <!-- Button to download the health card -->
+            <div class="button-container">
+                <a href="#" class="download-button" id="downloadBtn" onclick="downloadCard('{{ user.health_card_number }}')">Download Card</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include latest html2canvas JS library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="{{ url_for('static', filename='home.js') }}"></script>
+</body>
+</html>

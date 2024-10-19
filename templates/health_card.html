@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Card</title>
+    <style>
+        /* Center the card using Flexbox */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            font-family: Arial, sans-serif;
+        }
+
+        .card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: left;
+        }
+
+        .card h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .card img {
+            display: block;
+            margin: 0 auto;
+            width: 120px;
+            height: 120px;
+            border: 3px solid black;
+            border-radius: 10px;
+        }
+
+        .card p {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .card p strong {
+            width: 150px;
+            display: inline-block;
+            color: #333;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-button, .download-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover, .download-button:hover {
+            background-color: #0056b3;
+        }
+
+        .card-details {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card" id="healthCard">
+        <h2>Health Card</h2>
+        <img src="data:image/png;base64,{{ user.user_photo }}" alt="User Photo">
+        <div class="card-details">
+            <p><strong>Health Card ID:</strong> {{ user.health_card_number }}</p>
+            <p><strong>Name:</strong> {{ user.name }}</p>
+            <p><strong>DOB:</strong> {{ user.dob }}</p>
+            <p><strong>Gender:</strong> {{ user.gender }}</p>
+        </div>
+
+        <!-- Button Container for Back and Download -->
+        <div class="button-container">
+            <a href="{{ url_for('index') }}" class="back-button">Back to Login</a>
+            <a href="#" class="download-button" onclick="downloadCard('{{ user.health_card_number }}')">Download Card</a>
+        </div>
+    </div>
+
+    <!-- Include latest html2canvas JS library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        function downloadCard(healthCardId) {
+            // Hide the buttons temporarily
+            var buttons = document.querySelector('.button-container');
+            buttons.style.display = 'none';  // Hide buttons
+
+            // Select the card element
+            var card = document.getElementById('healthCard');
+
+            // Use html2canvas to capture the card as an image
+            html2canvas(card).then(function(canvas) {
+                // Create a link element to trigger download
+                var link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');  // Convert canvas to PNG
+                link.download = `healthCard_${healthCardId}.png`;  // Name of the downloaded image
+                link.click();  // Trigger the download
+
+                // Show the buttons again after the download
+                buttons.style.display = 'block';  // Show buttons
+            });
+        }
+    </script>
+</body>
+</html>

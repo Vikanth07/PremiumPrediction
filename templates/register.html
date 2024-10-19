@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+    <title>User Registration</title>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h2>User Registration</h2>
+
+            <form id="userRegistrationForm" action="{{ url_for('submit_registration') }}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="userPhoto">User Photo:</label>
+                    <input type="file" id="userPhoto" name="userPhoto" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" placeholder="Enter your age" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Select your gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth:</label>
+                    <input type="date" id="dob" name="dob" required>
+                </div>
+                <div class="form-group">
+                    <label for="aadhaarNumber">Aadhaar Number:</label>
+                    <input type="text" id="aadhaarNumber" name="aadhaarNumber" placeholder="Enter Aadhaar Number" maxlength="14" required oninput="formatAadhaar(this)">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" placeholder="Enter password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password:</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
+                </div>
+                
+                <button type="submit" class="submit-button" onclick="return validateForm()">Submit Registration</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="popupOverlay"></div>
+    <div class="popup" id="popup">
+        <span class="close-icon" onclick="closePopup()">&times;</span>
+        <p id="popupMessage"></p>
+    </div>
+
+    <script src="{{ url_for('static', filename='register.js') }}"></script>
+</body>
+</html>
